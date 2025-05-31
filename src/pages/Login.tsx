@@ -5,38 +5,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navbar } from "@/components/Navbar";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("client");
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login process
-    setTimeout(() => {
-      if (email && password) {
-        localStorage.setItem("wukala_user", JSON.stringify({ email }));
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to WukalaGPT!",
-        });
-        navigate("/chatbot");
+    try {
+      await login(formData.email, formData.password, activeTab as 'lawyer' | 'client');
+      
+      toast({
+        title: "Login Successful",
+        description: `Welcome back to WukalaGPT!`,
+      });
+      
+      // Redirect based on role
+      if (activeTab === 'lawyer') {
+        navigate("/lawyer-profile");
       } else {
-        toast({
-          title: "Login Failed",
-          description: "Please enter valid credentials",
-          variant: "destructive",
-        });
+        navigate("/find-lawyers");
       }
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: "Please check your credentials and try again",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -60,6 +71,25 @@ const Login = () => {
           </CardHeader>
           
           <CardContent>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="client">I need legal help</TabsTrigger>
+                <TabsTrigger value="lawyer">I'm a lawyer</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="client" className="mt-4">
+                <p className="text-sm text-slate-600 text-center">
+                  Login as a client to find and hire lawyers
+                </p>
+              </TabsContent>
+              
+              <TabsContent value="lawyer" className="mt-4">
+                <p className="text-sm text-slate-600 text-center">
+                  Login as a lawyer to manage your profile and connect with clients
+                </p>
+              </TabsContent>
+            </Tabs>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-slate-700 font-medium">
@@ -68,8 +98,8 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="Enter your email"
                   required
                   className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
@@ -83,8 +113,8 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                   placeholder="Enter your password"
                   required
                   className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
@@ -107,21 +137,6 @@ const Login = () => {
                   Sign up here
                 </Link>
               </p>
-            </div>
-            
-            <div className="mt-4">
-              <Button
-                variant="outline"
-                className="w-full border-slate-300 text-slate-700 hover:bg-slate-50"
-                onClick={() => {
-                  toast({
-                    title: "Google Sign-In",
-                    description: "Google authentication will be available soon!",
-                  });
-                }}
-              >
-                Continue with Google
-              </Button>
             </div>
           </CardContent>
         </Card>

@@ -2,9 +2,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-200">
@@ -26,23 +33,51 @@ export const Navbar = () => {
             <Link to="/" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
               Home
             </Link>
+            <Link to="/find-lawyers" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
+              Find Lawyers
+            </Link>
             <Link to="/blog" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
               Legal Resources
             </Link>
             <Link to="/chatbot" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
               AI Assistant
             </Link>
+            
             <div className="flex items-center space-x-4">
-              <Link to="/login">
-                <Button variant="ghost" className="text-slate-700 hover:text-blue-900">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="bg-blue-900 hover:bg-blue-800 text-white">
-                  Sign Up
-                </Button>
-              </Link>
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-slate-700">
+                    {user.name} ({user.role})
+                  </span>
+                  {user.role === 'lawyer' && (
+                    <Link to="/lawyer-profile">
+                      <Button variant="ghost" className="text-slate-700 hover:text-blue-900">
+                        My Profile
+                      </Button>
+                    </Link>
+                  )}
+                  <Button 
+                    onClick={handleLogout}
+                    variant="ghost" 
+                    className="text-slate-700 hover:text-blue-900"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="ghost" className="text-slate-700 hover:text-blue-900">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button className="bg-blue-900 hover:bg-blue-800 text-white">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -66,24 +101,50 @@ export const Navbar = () => {
               <Link to="/" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
                 Home
               </Link>
+              <Link to="/find-lawyers" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
+                Find Lawyers
+              </Link>
               <Link to="/blog" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
                 Legal Resources
               </Link>
               <Link to="/chatbot" className="text-slate-700 hover:text-blue-900 transition-colors font-medium">
                 AI Assistant
               </Link>
-              <div className="flex flex-col space-y-2 pt-4">
-                <Link to="/login">
-                  <Button variant="ghost" className="w-full text-slate-700 hover:text-blue-900">
-                    Login
+              
+              {user ? (
+                <div className="flex flex-col space-y-2 pt-4">
+                  <span className="text-slate-700 font-medium">
+                    {user.name} ({user.role})
+                  </span>
+                  {user.role === 'lawyer' && (
+                    <Link to="/lawyer-profile">
+                      <Button variant="ghost" className="w-full text-slate-700 hover:text-blue-900">
+                        My Profile
+                      </Button>
+                    </Link>
+                  )}
+                  <Button 
+                    onClick={handleLogout}
+                    variant="ghost" 
+                    className="w-full text-slate-700 hover:text-blue-900"
+                  >
+                    Logout
                   </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button className="w-full bg-blue-900 hover:bg-blue-800 text-white">
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
+                </div>
+              ) : (
+                <div className="flex flex-col space-y-2 pt-4">
+                  <Link to="/login">
+                    <Button variant="ghost" className="w-full text-slate-700 hover:text-blue-900">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button className="w-full bg-blue-900 hover:bg-blue-800 text-white">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

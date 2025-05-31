@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -45,14 +46,14 @@ const Index = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/signup">
+                <Link to="/find-lawyers">
                   <Button size="lg" className="bg-blue-900 hover:bg-blue-800 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Get Legal Help
+                    Find Expert Lawyers
                   </Button>
                 </Link>
-                <Link to="/blog">
+                <Link to="/signup">
                   <Button variant="outline" size="lg" className="border-blue-900 text-blue-900 hover:bg-blue-50 px-8 py-4 text-lg font-semibold transition-all duration-300">
-                    Explore Legal Resources
+                    Join as Lawyer
                   </Button>
                 </Link>
               </div>
@@ -79,24 +80,24 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <FeatureCard
+              title="Find Expert Lawyers"
+              description="Browse verified lawyers by specialization, location, and experience to find the perfect match for your case"
+              icon="⚖️"
+            />
+            <FeatureCard
               title="AI Legal Assistant"
               description="Get instant answers to your legal questions with our advanced AI chatbot trained on Pakistani law"
               icon="💬"
             />
             <FeatureCard
-              title="Voice Search"
-              description="Speak your legal queries in English or Urdu and get comprehensive responses"
-              icon="🎤"
+              title="Lawyer Profiles"
+              description="Lawyers can create detailed profiles showcasing their expertise, experience, and client testimonials"
+              icon="👨‍💼"
             />
             <FeatureCard
-              title="Document Analysis"
-              description="Upload contracts, FIRs, or legal documents for AI-powered analysis and insights"
-              icon="📄"
-            />
-            <FeatureCard
-              title="Bilingual Support"
-              description="Full support for English and Urdu to serve all Pakistani legal professionals"
-              icon="🌐"
+              title="Secure Platform"
+              description="All interactions and documents are secured with blockchain encryption for maximum privacy"
+              icon="🔒"
             />
           </div>
         </div>
@@ -108,7 +109,7 @@ const Index = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl font-bold mb-6 font-serif">
-                Secure & Professional Legal Platform
+                Connect Lawyers with Clients
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
@@ -116,8 +117,8 @@ const Index = () => {
                     <span className="text-white font-bold">✓</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Blockchain-Encrypted Storage</h3>
-                    <p className="text-slate-300">Your legal documents are stored with tamper-proof blockchain encryption</p>
+                    <h3 className="text-xl font-semibold mb-2">Role-Based Access</h3>
+                    <p className="text-slate-300">Separate portals for lawyers and clients with tailored features for each user type</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -125,8 +126,8 @@ const Index = () => {
                     <span className="text-white font-bold">✓</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Expert Legal Content</h3>
-                    <p className="text-slate-300">Access curated legal articles, guides, and news in English and Urdu</p>
+                    <h3 className="text-xl font-semibold mb-2">Smart Matching</h3>
+                    <p className="text-slate-300">Advanced search and filtering to match clients with the most suitable lawyers</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -134,8 +135,8 @@ const Index = () => {
                     <span className="text-white font-bold">✓</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Advanced AI Models</h3>
-                    <p className="text-slate-300">Choose from multiple AI models specialized for Pakistani legal contexts</p>
+                    <h3 className="text-xl font-semibold mb-2">Verified Professionals</h3>
+                    <p className="text-slate-300">All lawyers are verified with their Bar Council credentials for authenticity</p>
                   </div>
                 </div>
               </div>
@@ -145,13 +146,20 @@ const Index = () => {
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-bold mb-4 text-center">Ready to Get Started?</h3>
                   <p className="text-slate-300 text-center mb-6">
-                    Join thousands of legal professionals already using WukalaGPT
+                    Join thousands of legal professionals and clients using WukalaGPT
                   </p>
-                  <Link to="/signup" className="block">
-                    <Button size="lg" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4">
-                      Start Your Legal Journey
-                    </Button>
-                  </Link>
+                  <div className="space-y-3">
+                    <Link to="/find-lawyers" className="block">
+                      <Button size="lg" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4">
+                        Find a Lawyer
+                      </Button>
+                    </Link>
+                    <Link to="/signup" className="block">
+                      <Button variant="outline" size="lg" className="w-full border-white text-white hover:bg-white hover:text-slate-800 font-semibold py-4">
+                        Join as Lawyer
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             </div>

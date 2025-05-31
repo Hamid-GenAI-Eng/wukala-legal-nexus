@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navbar } from "@/components/Navbar";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
@@ -16,14 +18,15 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("client");
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Basic validation
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Password Mismatch",
@@ -34,21 +37,29 @@ const Signup = () => {
       return;
     }
     
-    // Simulate signup process
-    setTimeout(() => {
-      if (formData.name && formData.email && formData.password) {
-        localStorage.setItem("wukala_user", JSON.stringify({ 
-          name: formData.name, 
-          email: formData.email 
-        }));
-        toast({
-          title: "Account Created",
-          description: "Welcome to WukalaGPT! Your account has been created successfully.",
-        });
-        navigate("/chatbot");
+    try {
+      await login(formData.email, formData.password, activeTab as 'lawyer' | 'client');
+      
+      toast({
+        title: "Account Created",
+        description: `Welcome to WukalaGPT! Your ${activeTab} account has been created successfully.`,
+      });
+      
+      // Redirect based on role
+      if (activeTab === 'lawyer') {
+        navigate("/lawyer-profile");
+      } else {
+        navigate("/find-lawyers");
       }
+    } catch (error) {
+      toast({
+        title: "Signup Failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -66,12 +77,31 @@ const Signup = () => {
               />
             </div>
             <CardTitle className="text-2xl font-bold text-slate-800 font-serif">
-              Create Account
+              Join WukalaGPT
             </CardTitle>
-            <p className="text-slate-600">Join WukalaGPT and start your legal journey</p>
+            <p className="text-slate-600">Create your account and start your legal journey</p>
           </CardHeader>
           
           <CardContent>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="client">I need legal help</TabsTrigger>
+                <TabsTrigger value="lawyer">I'm a lawyer</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="client" className="mt-4">
+                <p className="text-sm text-slate-600 text-center">
+                  Sign up as a client to find and hire qualified lawyers
+                </p>
+              </TabsContent>
+              
+              <TabsContent value="lawyer" className="mt-4">
+                <p className="text-sm text-slate-600 text-center">
+                  Sign up as a lawyer to create your profile and connect with clients
+                </p>
+              </TabsContent>
+            </Tabs>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-slate-700 font-medium">
@@ -138,7 +168,7 @@ const Signup = () => {
                 className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 font-semibold transition-all duration-300"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating Account..." : "Create Account"}
+                {isLoading ? "Creating Account..." : `Create ${activeTab === 'lawyer' ? 'Lawyer' : 'Client'} Account`}
               </Button>
             </form>
             
