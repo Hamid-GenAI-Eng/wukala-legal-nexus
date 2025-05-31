@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { Hero3D } from "@/components/Hero3D";
 import { FeatureCard } from "@/components/FeatureCard";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -158,6 +158,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
